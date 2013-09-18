@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,7 +21,9 @@ public class Pessoa implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
-    public Pessoa(){}
+    public Pessoa() {
+        this.sexo = new Sexo();
+    }
     
     @Id
     @GeneratedValue
@@ -46,6 +50,19 @@ public class Pessoa implements Serializable{
     @Temporal(TemporalType.DATE)
     private Date dataCadastro;
 
+    @Column(name = "Login", unique=true, length = 25)
+    private String login;
+
+    @Column(name = "Senha", length = 40)
+    private String senha;
+    
+    @Column(name = "Permissao", length = 36)
+    private String permissao;
+    
+    @OneToOne(mappedBy = "pessoa", fetch = FetchType.LAZY)
+    @ForeignKey(name="EnderecoPessoa")
+    private Endereco endereco;    
+    
     @ManyToOne(optional = false)
     @ForeignKey(name = "pessoaSexo")
     @JoinColumn(name="IdSexo", referencedColumnName = "IdSexo")
@@ -105,6 +122,38 @@ public class Pessoa implements Serializable{
 
     public void setDataCadastro(Date dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getPermissao() {
+        return permissao;
+    }
+
+    public void setPermissao(String permissao) {
+        this.permissao = permissao;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 
     public Sexo getSexo() {
