@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -15,10 +16,11 @@ import org.hibernate.annotations.ForeignKey;
 @Entity
 @Table(name="pessoa")
 public class Pessoa implements Serializable{
+
     private static final long serialVersionUID = 1L;
 
     public Pessoa(){}
-
+    
     @Id
     @GeneratedValue
     @Column(name="idPessoa", nullable = false )
@@ -46,7 +48,9 @@ public class Pessoa implements Serializable{
 
     @ManyToOne(optional = false)
     @ForeignKey(name = "pessoaSexo")
-    
+    @JoinColumn(name="IdSexo", referencedColumnName = "IdSexo")
+    private Sexo sexo;    
+
     public Integer getIdPessoa() {
         return idPessoa;
     }
@@ -102,6 +106,15 @@ public class Pessoa implements Serializable{
     public void setDataCadastro(Date dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
+    }
+
 
         @Override
     public int hashCode() {
