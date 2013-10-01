@@ -9,10 +9,11 @@
                 template="./../resources/main.xhtml">
 
     <ui:define name="tarefas">
+            <h:form  prependId="false" id="formPessoa">
+
         <p:fieldset legend="Cadastrar Pessoas">
 
             <br/>
-            <h:form>
                 <p:wizard nextLabel="Próxima Aba" backLabel="Aba Anterior">
 
                     <p:tab title="Informações Básicas" id="infoPessoal">
@@ -57,6 +58,15 @@
                                 <h:outputLabel for="usuario" value="Nome de Usuário.:"/>
                                 <p:inputText id="usuario" value="#{mbPessoa.pessoa.login}" size="30"/>
 
+                                <h:outputLabel for="senha" value="Senha.:" />
+                                <p:password id="senha" size="30" maxlength="22" promptLabel="Digite sua Senha" value="#{mbPessoa.confereSenha}"
+                                            weakLabel="Senha Fraca" goodLabel="Senha Boa" strongLabel="Senha Forte" feedback="true"/> 
+
+                                <h:outputLabel for="senhaconf2" value="Confirmar Senha.:"/>
+                                <p:password id="senhaconf2" size="30" value="#{mbPessoa.pessoa.senha}" maxlength="22"   
+                                            promptLabel="Confirme sua Senha" weakLabel="Senha Fraca" validator="passwordValidator"
+                                            goodLabel="Senha Boa" strongLabel="Senha Forte" feedback="true">
+                                </p:password>  
                             </h:panelGrid>
                         </p:panel>
                     </p:tab>
@@ -123,14 +133,11 @@
                             <p:commandButton value="Cancelar" actionListener="#{mbPessoa.limpPessoa}" 
                                              image="ui-icon ui-icon-close" update="@form"/>
                         </p:panel>
-
-                    </p:tab>
-
-
-
+                </p:tab>
                 </p:wizard>
-            </h:form>
         </p:fieldset>
+            </h:form>
+
     </ui:define>
 
 </ui:composition>

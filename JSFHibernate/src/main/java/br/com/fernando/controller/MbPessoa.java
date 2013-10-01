@@ -5,6 +5,7 @@ import br.com.fernando.model.dao.InterfaceDAO;
 import br.com.fernando.model.entitie.Cidade;
 import br.com.fernando.model.entitie.Endereco;
 import br.com.fernando.model.entitie.Pessoa;
+import br.com.fernando.util.ConversorSenha;
 import br.com.fernando.util.FacesContextUtil; 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,8 +26,12 @@ public class MbPessoa  implements Serializable {
     
     private List<Cidade> cidades;
     private List<Endereco> enderecos;
-    
-    public MbPessoa(){}
+    private List<Pessoa> pessoas;
+
+    private String confereSenha;
+
+    public MbPessoa(){
+    }
     
     private InterfaceDAO<Pessoa> pessoaDAO(){
         InterfaceDAO<Pessoa> pessoaDAO = new HibernateDAO<Pessoa>(Pessoa.class, FacesContextUtil.getRequestSession());
@@ -55,7 +60,6 @@ public class MbPessoa  implements Serializable {
     }
 
     public void addPessoa() {
-        
         if (pessoa.getIdPessoa()== null || pessoa.getIdPessoa()== 0) {
             pessoa.setDataDeCadastro( new Date());
             insertPessoa();
@@ -67,6 +71,7 @@ public class MbPessoa  implements Serializable {
     }
  
     private void insertPessoa() {
+        pessoa.setSenha( ConversorSenha.converteSHA1( pessoa.getSenha()));
         this.pessoaDAO().save(pessoa);
         endereco.setPessoa(pessoa);
         this.enderecoDAO().save(endereco);
@@ -80,11 +85,16 @@ public class MbPessoa  implements Serializable {
         enderecoDAO().update(endereco);
         FacesContext.getCurrentInstance().addMessage(null,
         new FacesMessage(FacesMessage.SEVERITY_INFO, "Alteração efetuada com sucesso", ""));
+        limpPessoa();
     }
 
-    private void delete(){
+    public void delete(){
         enderecoDAO().remove(endereco);
         pessoaDAO().remove(pessoa);
+        FacesContext.getCurrentInstance().addMessage(null,
+        new FacesMessage(FacesMessage.SEVERITY_INFO, "Alteração efetuada com sucesso", ""));
+        limpPessoa();
+
     }
 
     public Pessoa getPessoa() {
@@ -119,5 +129,21 @@ public class MbPessoa  implements Serializable {
 
     public void setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
+    }
+
+    public List<Pessoa> getPessoas() {
+        return pessoaDAO().getEntities();
+    }
+
+    public void setPessoas(List<Pessoa> pessoas) {
+        this.pessoas = pessoas;
+    }
+    
+    public String getConfereSenha() {
+        return confereSenha;
+    }
+
+    public void setConfereSenha(String confereSenha) {
+        this.confereSenha = confereSenha;
     }
 }
